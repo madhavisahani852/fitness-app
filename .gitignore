@@ -1,0 +1,31 @@
+# Python Caches & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+
+# Development & Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+.gemini/
+scratch/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Frontend deployment/cache
+.vercel/
+dist/
+node_modules/

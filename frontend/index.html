@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Fitness & Diet Recommendation System</title>
+    <meta name="description"
+        content="AI-powered personalized fitness and diet recommendation system using Machine Learning">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="brand">
+                <i class="fa-solid fa-dumbbell brand-icon"></i>
+                <div>
+                    <h1 class="brand-title">Stay Fit<span class="ai-badge">AI</span></h1>
+                    <p class="brand-sub">Advanced Personal Fitness & Diet Optimization</p>
+                </div>
+            </div>
+            <button id="config-btn" class="gear-btn" title="Configure Backend URL">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ── CONFIG MODAL ───────────────────────────────────────────────────── -->
+    <div id="config-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Backend Settings">
+        <div class="modal-box glass">
+            <button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button>
+            <h2><i class="fa-solid fa-server"></i> Backend API URL</h2>
+            <p>Set your deployed Render backend URL here. Saved in your browser.</p>
+            <div class="field-group">
+                <label for="backend-url-input">API URL</label>
+                <input type="url" id="backend-url-input" placeholder="http://localhost:5000">
+            </div>
+            <button id="save-config-btn" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Save
+            </button>
+        </div>
+    </div>
+
+    <!-- ── MAIN WRAPPER ───────────────────────────────────────────────────── -->
+    <main class="main-wrapper">
+
+        <!-- ── INPUT FORM ─────────────────────────────────────────────────── -->
+        <section class="card form-card" id="input-section">
+            <div class="section-label">
+                <i class="fa-solid fa-clipboard-user"></i>
+                <span>Step 1 — Enter Your Profile Details</span>
+            </div>
+
+            <form id="fitness-form" novalidate>
+                <div class="form-grid">
+
+                    <!-- Row 1 -->
+                    <div class="field-group">
+                        <label for="name"><i class="fa-solid fa-user"></i> Full Name</label>
+                        <input type="text" id="name" required placeholder="e.g. Alex Smith" value="Alex Smith">
+                    </div>
+
+                    <div class="field-group">
+                        <label for="age"><i class="fa-solid fa-cake-candles"></i> Age</label>
+                        <input type="number" id="age" required min="10" max="80" value="24" placeholder="10–80">
+                    </div>
+
+                    <div class="field-group">
+                        <label for="gender"><i class="fa-solid fa-venus-mars"></i> Gender</label>
+                        <select id="gender" required>
+                            <option value="Male" selected>Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <!-- Row 2 -->
+                    <div class="field-group">
+                        <label for="height"><i class="fa-solid fa-ruler-vertical"></i> Height (cm)</label>
+                        <input type="number" id="height" required min="100" max="250" value="175" placeholder="100–250">
+                    </div>
+
+                    <div class="field-group">
+                        <label for="weight"><i class="fa-solid fa-weight-scale"></i> Weight (kg)</label>
+                        <input type="number" id="weight" required min="30" max="200" value="70" placeholder="30–200">
+                    </div>
+
+                    <div class="field-group">
+                        <label for="goal"><i class="fa-solid fa-bullseye"></i> Fitness Goal</label>
+                        <select id="goal" required>
+                            <option value="Bulk">Bulk</option>
+                            <option value="Cut" selected>Cut</option>
+                            <option value="Maintain">Maintain</option>
+                        </select>
+                    </div>
+
+                    <!-- Row 3 -->
+                    <div class="field-group">
+                        <label for="diet_pref"><i class="fa-solid fa-utensils"></i> Diet Preference</label>
+                        <select id="diet_pref" required>
+                            <option value="Balanced" selected>Balanced</option>
+                            <option value="High Protein">High Protein</option>
+                            <option value="Low Carb">Low Carb</option>
+                            <option value="Keto">Keto</option>
+                            <option value="Vegetarian">Vegetarian</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="medical"><i class="fa-solid fa-notes-medical"></i> Medical Condition</label>
+                        <select id="medical" required>
+                            <option value="None" selected>None</option>
+                            <option value="Diabetes">Diabetes</option>
+                            <option value="Hypertension">Hypertension</option>
+                            <option value="Asthma">Asthma</option>
+                        </select>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="steps"><i class="fa-solid fa-shoe-prints"></i> Daily Steps</label>
+                        <input type="number" id="steps" required min="0" max="50000" value="10000" step="500">
+                    </div>
+
+                </div>
+
+                <!-- Sliders Row -->
+                <div class="sliders-row">
+                    <div class="slider-group">
+                        <label for="sleep">
+                            <i class="fa-solid fa-moon"></i> Sleep Hours / Day
+                            <strong id="sleep-val">7</strong>h
+                        </label>
+                        <input type="range" id="sleep" min="1" max="12" value="7" step="1">
+                        <div class="slider-marks"><span>1h</span><span>12h</span></div>
+                    </div>
+                    <div class="slider-group">
+                        <label for="workout_hours">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Workout Hours / Day
+                            <strong id="workout-val">1.5</strong>h
+                        </label>
+                        <input type="range" id="workout_hours" min="0" max="5" value="1.5" step="0.5">
+                        <div class="slider-marks"><span>0h</span><span>5h</span></div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn btn-analyze" id="submit-btn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Analyze My Profile</span>
+                    <div class="btn-shine"></div>
+                </button>
+            </form>
+
+            <!-- Inline error message -->
+            <div id="form-error" class="form-error hidden">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span id="form-error-text"></span>
+            </div>
+        </section>
+
+        <!-- ── LOADER ──────────────────────────────────────────────────────── -->
+        <section id="loader-section" class="card loader-card hidden">
+            <div class="pulse-rings">
+                <div class="ring ring-1"></div>
+                <div class="ring ring-2"></div>
+                <div class="ring ring-3"></div>
+                <i class="fa-solid fa-brain loader-brain"></i>
+            </div>
+            <h2>Analyzing Your Profile...</h2>
+            <p>Running ML models: Linear Regression, Random Forest & Cosine Similarity</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </section>
+
+        <!-- ── RESULTS DASHBOARD ───────────────────────────────────────────── -->
+        <section id="results-section" class="hidden">
+
+            <!-- Greeting Banner -->
+            <div class="greeting-banner glass" id="greeting-banner">
+                <div class="greeting-text">
+                    <h2 id="greeting-name">Hello, Alex!</h2>
+                    <p>Here's your personalized AI fitness & diet analysis</p>
+                </div>
+                <button class="btn btn-outline" id="reanalyze-btn">
+                    <i class="fa-solid fa-rotate-right"></i> Re-Analyze
+                </button>
+            </div>
+
+            <!-- ── METRIC CARDS ────────────────────────────────────────── -->
+            <div class="metrics-grid">
+                <div class="metric-card glass" id="card-bmi">
+                    <div class="metric-icon-wrap icon-blue"><i class="fa-solid fa-calculator"></i></div>
+                    <div class="metric-body">
+                        <span class="metric-label">Body Mass Index</span>
+                        <div class="metric-value" id="m-bmi">—</div>
+                        <span class="metric-tag" id="m-bmi-tag">—</span>
+                    </div>
+                </div>
+                <div class="metric-card glass">
+                    <div class="metric-icon-wrap icon-orange"><i class="fa-solid fa-fire-flame-curved"></i></div>
+                    <div class="metric-body">
+                        <span class="metric-label">AI Target Calories</span>
+                        <div class="metric-value" id="m-calories">—</div>
+                        <span class="metric-tag">ML Predicted</span>
+                    </div>
+                </div>
+                <div class="metric-card glass">
+                    <div class="metric-icon-wrap icon-purple"><i class="fa-solid fa-heart-pulse"></i></div>
+                    <div class="metric-body">
+                        <span class="metric-label">BMR Calories</span>
+                        <div class="metric-value" id="m-bmr">—</div>
+                        <span class="metric-tag">Formula Based</span>
+                    </div>
+                </div>
+                <div class="metric-card glass">
+                    <div class="metric-icon-wrap icon-green"><i class="fa-solid fa-moon"></i></div>
+                    <div class="metric-body">
+                        <span class="metric-label">Sleep Quality</span>
+                        <div class="metric-value" id="m-sleep">—</div>
+                        <span class="metric-tag" id="m-sleep-tag">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── MEDICAL WARNING ─────────────────────────────────────── -->
+            <div id="warning-box" class="warning-card glass hidden">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <div>
+                    <strong>Medical Advisory</strong>
+                    <p id="warning-text"></p>
+                </div>
+            </div>
+
+            <!-- ── RECOMMENDATIONS ─────────────────────────────────────── -->
+            <div class="rec-grid">
+                <div class="rec-card glass border-left-blue">
+                    <div class="rec-head">
+                        <div class="rec-icon-wrap icon-blue"><i class="fa-solid fa-dumbbell"></i></div>
+                        <div>
+                            <h3>Workout Plan</h3>
+                            <small>Random Forest Classifier</small>
+                        </div>
+                    </div>
+                    <div class="rec-tag" id="workout-tag">—</div>
+                    <pre class="rec-content" id="workout-display"></pre>
+                </div>
+                <div class="rec-card glass border-left-green">
+                    <div class="rec-head">
+                        <div class="rec-icon-wrap icon-green"><i class="fa-solid fa-apple-whole"></i></div>
+                        <div>
+                            <h3>Meal Plan</h3>
+                            <small>Cosine Similarity Match</small>
+                        </div>
+                    </div>
+                    <div class="rec-tag" id="diet-tag">—</div>
+                    <pre class="rec-content" id="diet-display"></pre>
+                </div>
+            </div>
+
+            <!-- ── MACROS + BMI GAUGE ──────────────────────────────────── -->
+            <div class="charts-duo">
+                <div class="chart-card glass">
+                    <h3 class="chart-title"><i class="fa-solid fa-chart-pie icon-blue"></i> Macro Nutrients</h3>
+                    <div class="donut-wrap">
+                        <canvas id="chart-macros"></canvas>
+                    </div>
+                    <div class="macro-pills">
+                        <div class="pill pill-blue">Protein <strong id="pill-protein">—</strong></div>
+                        <div class="pill pill-orange">Carbs <strong id="pill-carbs">—</strong></div>
+                        <div class="pill pill-green">Fat <strong id="pill-fat">—</strong></div>
+                    </div>
+                </div>
+
+                <div class="chart-card glass">
+                    <h3 class="chart-title"><i class="fa-solid fa-gauge-high icon-orange"></i> BMI Scale</h3>
+                    <div class="bmi-scale-wrap">
+                        <div class="bmi-pointer-row">
+                            <div id="bmi-pointer" class="bmi-arrow"></div>
+                        </div>
+                        <div class="bmi-track">
+                            <div class="bmi-seg seg-blue" title="Underweight &lt; 18.5"></div>
+                            <div class="bmi-seg seg-green" title="Normal 18.5–24.9"></div>
+                            <div class="bmi-seg seg-orange" title="Overweight 25–29.9"></div>
+                            <div class="bmi-seg seg-red" title="Obese ≥ 30"></div>
+                        </div>
+                        <div class="bmi-track-labels">
+                            <span>Underweight</span><span>Normal</span><span>Overweight</span><span>Obese</span>
+                        </div>
+                    </div>
+                    <div class="bmi-detail-box">
+                        <div class="bmi-detail-row">
+                            <span>Your BMI</span><strong id="bmi-detail-val">—</strong>
+                        </div>
+                        <p id="bmi-advice" class="bmi-advice-text"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── WEIGHT CHARTS ───────────────────────────────────────── -->
+            <div class="charts-duo">
+                <div class="chart-card glass">
+                    <h3 class="chart-title"><i class="fa-solid fa-chart-line icon-green"></i> Weight History & LSTM
+                        Prediction</h3>
+                    <div class="chart-area">
+                        <canvas id="chart-weight"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card glass">
+                    <h3 class="chart-title"><i class="fa-solid fa-chart-area icon-purple"></i> 4-Week Projection</h3>
+                    <div class="chart-area">
+                        <canvas id="chart-projection"></canvas>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+        <!-- /results-section -->
+
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Antigravity Fitness AI &mdash; Built for production deployment on Render & Vercel</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
