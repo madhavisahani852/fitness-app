@@ -154,30 +154,6 @@ Check if the API is operational and models are active.
 
 ---
 
-## ☁️ Deployment Instructions
-
-### 1. Backend (ML API) → Render
-1. Create a free account on [Render](https://render.com/).
-2. Click **New** > **Web Service**.
-3. Link your GitHub repository.
-4. Set the following settings:
-   - **Root Directory**: `backend` (Important! This directs Render to run files inside the subfolder)
-   - **Runtime**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt && python train.py`
-   - **Start Command**: `gunicorn app:app`
-5. Click deploy. Render will compile dependencies, train the models, and expose a public URL (e.g. `https://fitness-api.onrender.com`).
-
-### 2. Frontend (Dashboard UI) → Vercel
-1. Create an account on [Vercel](https://vercel.com/).
-2. Click **Add New** > **Project** and select your GitHub repository.
-3. In configuration settings:
-   - **Root Directory**: `frontend`
-   - **Framework Preset**: *Other* or *None* (since it is a static web app)
-4. Click deploy.
-5. Once deployed, open your site, click the **Gear Icon** in the header, and paste your Render API URL (e.g. `https://fitness-api.onrender.com`) to connect the dashboard to the backend. This configuration is stored in your local browser storage.
-
----
-
 ## 🛠️ Testing
 
 Unit tests cover the Flask routing, schema restrictions, and model predictions.
